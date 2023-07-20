@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+include_once 'modules/Reservas/routes/api.php';
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
