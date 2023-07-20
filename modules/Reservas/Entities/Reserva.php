@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace modules\Entities;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +16,7 @@ class Reserva extends Model
         'fecha',
         'horario',
         'comensales',
+        'email',
         'nombre',
-        'email'
     ];
 }

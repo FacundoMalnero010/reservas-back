@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use Http\Controller\V1\ReservasController;
 use Illuminate\Support\Facades\Route;
 
 Route::group('reservas/api', function () {
