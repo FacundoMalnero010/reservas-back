@@ -3,8 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-include_once '..\modules\Reservas\routes\api.php';
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -15,6 +13,9 @@ include_once '..\modules\Reservas\routes\api.php';
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+//Rutas para las reservas
+require __DIR__.'../../modules/Reservas/routes/api.php';
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

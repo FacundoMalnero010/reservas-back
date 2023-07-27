@@ -4,7 +4,7 @@ namespace modules\Reservas\Repository\V1;
 
 use app\Repository\EloquentRepository;
 use Illuminate\Http\Request;
-use modules\Entities\Reserva;
+use modules\Reservas\Entities\Reserva;
 
 class ReservasRepository extends EloquentRepository
 {

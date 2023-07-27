@@ -1,5 +1,7 @@
 <?php
 
+namespace modules\Reservas\routes;
+
 use modules\Reservas\Http\Controllers\V1\ReservasController;
 use Illuminate\Support\Facades\Route;
 

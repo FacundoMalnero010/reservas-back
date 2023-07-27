@@ -8,14 +8,11 @@ use JsonSerializable;
 
 abstract class BaseDto implements JsonSerializable
 {
-    //El constructor se encarga de completar el array asociativo
-    //con los valores correspondientes
     public function __construct(array $attributes = [])
     {
         $this->fill($attributes);
     }
 
-    //Esta función crea el array asociativo con los datos que recibe
     protected function fill(array $attributes)
     {
         foreach ($attributes as $key => $value) {
@@ -27,17 +24,69 @@ abstract class BaseDto implements JsonSerializable
         return $this;
     }
 
+    /**
+     * Fill the model with an array of attributes and return only the array attributes properties.
+     *
+     * @param  array  $attributes
+     * @return $this
+     */
+    public function fillCustom(array $attributes)
+    {
+        foreach ($this as $attribute => $val) {
+            if (array_key_exists($attribute, $attributes)) {
+                $this->{$attribute} = $attributes[$attribute];
+            } else {
+                $this->offsetUnset($attribute);
+            }
+        }
+
+        return $this;
+    }
+
+    public function structure()
+    {
+        $atributes = [];
+        foreach ($this as $attribute => $val) {
+            $atributes[] = $attribute;
+        }
+
+        return $atributes;
+    }
+
     public function jsonSerialize()
     {
         return get_object_vars($this);
     }
 
-    //Esta función obtiene los atributos del objeto y los separa
-    //para usarlos como claves
+    public function hide($params = [])
+    {
+        if (is_array($params) && count($params) > 0) {
+            foreach ($params as $key => $value) {
+                unset($this->{$key});
+            }
+        }
+
+        return $this;
+    }
+
+    public function hideNull()
+    {
+        foreach (get_object_vars($this) as $key => $value) {
+            if ($value === null) {
+                unset($this->{$key});
+            }
+        }
+
+        return $this;
+    }
+
     public function toArray()
     {
         return get_object_vars($this);
     }
-}
 
-?>
+    private function offsetUnset($offset)
+    {
+        unset($this->$offset, $this->$offset);
+    }
+}
