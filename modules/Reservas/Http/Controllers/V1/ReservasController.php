@@ -22,58 +22,92 @@ class ReservasController extends Controller
         $this->apiResponseDto  = $apiResponseDto;
     }
 
+    /**
+     * Recibe un array de dto's de reservas y devuelve una respuesta json
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+
     public function index()
     {
         $reservas = $this->reservasService->index();
         return $this->apiResponseDto->response(ResponseAlias::HTTP_OK, $reservas, (count($reservas) > 0) ? null : 'No hay reservas aún');
     }
 
+    /**
+     * Recibe un dto de reserva y devuelve una respuesta json
+     * 
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ModelNotFound
+     */
+
     public function get($id)
     {
-        try{
-            $reserva = $this->reservasService->get($id);
-            return $this->apiResponseDto->response(ResponseAlias::HTTP_OK, $reserva);
-        }
-        catch (ModelNotFoundException $e)
-        {
+        $reserva = $this->reservasService->get($id);
+
+        if($reserva instanceof ModelNotFoundException){
             return $this->apiResponseDto->responseError(ResponseAlias::HTTP_NOT_FOUND);
         }
+
+        return $this->apiResponseDto->response(ResponseAlias::HTTP_OK, $reserva);
     }
+
+    /**
+     * Recibe un dto de reserva y devuelve una respuesta json
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ValidationException
+     */
 
     public function store(Request $request)
     {
-        try{
-            $result = $this->reservasService->store($request);
-            return $this->apiResponseDto->response(ResponseAlias::HTTP_OK);
+        $reserva = $this->reservasService->store($request);
+
+        if($reserva instanceof ValidationException){
+            return $this->apiResponseDto->responseError(423);
         }
-        catch (ValidationException $e)
-        {
-            return $this->apiResponseDto->responseError(ResponseAlias::HTTP_CONFLICT);
-        }
+
+        return $this->apiResponseDto->response(ResponseAlias::HTTP_OK, $reserva);
     }
+
+    /**
+     * Recibe un dto de reserva y devuelve una respuesta json
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ModelNotFound
+     */
 
     public function update(Request $request, $id)
     {
-        try
-        {
-            $result = $this->reservasService->update($request,$id);
-            return $this->apiResponseDto->response(ResponseAlias::HTTP_OK);
-        }
-        catch (ModelNotFoundException $e)
-        {
+        $reserva = $this->reservasService->update($request, $id);
+
+        if($reserva instanceof ModelNotFoundException){
             return $this->apiResponseDto->responseError(ResponseAlias::HTTP_NOT_FOUND);
         }
+
+        return $this->apiResponseDto->response(ResponseAlias::HTTP_OK, $reserva);
     }
+
+    /**
+     * Recibe un dto de reserva y devuelve una respuesta json
+     * 
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ModelNotFound
+     */
 
     public function destroy($id)
     {
-        try {
-            $result = $this->reservasService->destroy($id);
-            return $this->apiResponseDto->response(ResponseAlias::HTTP_OK);
-        }
-        catch (ModelNotFoundException $e)
-        {
+        $reserva = $this->reservasService->destroy($id);
+
+        if($reserva instanceof ModelNotFoundException){
             return $this->apiResponseDto->responseError(ResponseAlias::HTTP_NOT_FOUND);
         }
+
+        return $this->apiResponseDto->response(ResponseAlias::HTTP_OK, $reserva);
     }
 }

@@ -18,6 +18,12 @@ class ReservasService
         $this->reservasRepository = $reservasRepository;
     }
 
+    /**
+     * Recibe una colección de todas las reservas y retorna un array de Dto's de las mismas
+     * 
+     * @return \modules\Reservas\Dto\V1\ReservaDto[]
+     */
+    
     public function index()
     {
         $reservasBBDD = $this->reservasRepository->index();
@@ -33,18 +39,33 @@ class ReservasService
         return $reservas;
     }
 
+    /**
+     * Recibe una reserva y se retorna el dto
+     * 
+     * @param int $id
+     * @return \modules\Reservas\Dto\V1\ReservaDto
+     * @throws ModelNotFound
+     * @uses verificarInstanciaModelNotFound($reserva)
+     */
+
     public function get($id)
     {
-        try
-        {
-            $reserva = $this->reservasRepository->get($id);
-            return new ReservaDto($reserva->toArray());
-        }
-        catch (ModelNotFoundException $e)
-        {
-            return $e;
-        }
+        $reserva = $this->reservasRepository->get($id);
+
+        $this->verificarInstanciaModelNotFound($reserva);
+        
+        return new ReservaDto($reserva->toArray());
     }
+
+    /**
+     * Valida los datos de reserva, se recibe la reserva almacenada
+     * y se retorna el dto
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return \modules\Reservas\Dto\V1\ReservaDto
+     * @throws ValidationException
+     * @uses validarReserva($request)
+     */
 
     public function store(Request $request)
     {
@@ -53,7 +74,7 @@ class ReservasService
         //Si los datos no se validan se lanza una excepción
         if($validator->fails())
         {
-            throw new ValidationException();
+            throw new ValidationException('');
         }
         else
         {
@@ -63,33 +84,51 @@ class ReservasService
 
     }
 
+    /**
+     * Recibe una reserva modificada y se retorna el dto
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \modules\Reservas\Dto\V1\ReservaDto
+     * @throws ModelNotFound
+     * @uses verificarInstanciaModelNotFound($reserva)
+     */
+
     public function update(Request $request, $id)
     {
-        try
-        {
-            $result = $this->reservasRepository->update($request, $id);
-            return new ReservaDto($result->toArray());
-        }
-        catch (ModelNotFoundException $e)
-        {
-            return $e;
-        }
+        $reserva = $this->reservasRepository->update($request, $id);
+
+        $this->verificarInstanciaModelNotFound($reserva);
+        
+        return new ReservaDto($reserva->toArray());
     }
+
+    /**
+     * Recibe una reserva eliminada y se retorna el dto
+     * 
+     * @param int $id
+     * @return \modules\Reservas\Dto\V1\ReservaDto
+     * @throws ModelNotFound
+     * @uses verificarInstanciaModelNotFound($reserva)
+     */
 
     public function destroy($id)
     {
-        try
-        {
-            $result = $this->reservasRepository->destroy($id);
-            return new ReservaDto($result->toArray());
-        }
-        catch (ModelNotFoundException $e)
-        {
-            return $e;
-        }
+        $reserva = $this->reservasRepository->destroy($id);
+
+        $this->verificarInstanciaModelNotFound($reserva);
+        
+        return new ReservaDto($reserva->toArray());
     }
 
     //********************** Funciones auxiliares ***************************
+
+    /**
+     * Recibe los datos de una reserva y los valida
+     * 
+     * @param array $data
+     * @return \Illuminate\Validation\Validator
+     */
 
     public function validarReserva(array $data)
     {
@@ -100,5 +139,10 @@ class ReservasService
            'email'      => 'required|string',
            'nombre'     => 'required|string'
         ]);
+    }
+
+    public function verificarInstanciaModelNotFound($a)
+    {
+        $a instanceof ModelNotFoundException ? (throw new ModelNotFoundException('')) : null;
     }
 }

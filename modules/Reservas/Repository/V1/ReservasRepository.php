@@ -13,15 +13,37 @@ class ReservasRepository extends EloquentRepository
         parent::__construct(new Reserva());
     }
 
+    /**
+     * Consulta y retorna todas las reservas almacenadas
+     * 
+     * @return Collection
+     */
+
     public function index()
     {
         return Reserva::all();
     }
 
+    /**
+     * Consulta y retorna una reserva almacenada
+     * 
+     * @param int $id
+     * @return \modules\Reservas\Entities\Reserva
+     * @throws ModelNotFound
+     */
+
     public function get($id)
     {
         return Reserva::findOrFail($id);
     }
+
+    /**
+     * Almacena una reserva
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return \modules\Reservas\Entities\Reserva
+     * @uses asignarDatosReserva($reserva,$request)
+     */
 
     public function store(Request $request)
     {
@@ -34,6 +56,16 @@ class ReservasRepository extends EloquentRepository
         return $reserva;
     }
 
+    /**
+     * Actualiza datos de una reserva existente
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \modules\Reservas\Entities\Reserva
+     * @throws ModelNotFound
+     * @uses asignarDatosReserva($reserva,$request)
+     */
+
     public function update(Request $request, $id)
     {
         $reserva = Reserva::findOrFail($id);
@@ -43,6 +75,14 @@ class ReservasRepository extends EloquentRepository
         return $reserva;
     }
 
+    /**
+     * Hace la baja física de una reserva
+     * 
+     * @param int $id
+     * @return \modules\Reservas\Entities\Reserva
+     * @throws ModelNotFound
+     */
+
     public function destroy($id)
     {
         $reserva = Reserva::findOrFail($id);
@@ -51,6 +91,13 @@ class ReservasRepository extends EloquentRepository
     }
 
     //********************** Funciones auxiliares *************************
+    
+    /**
+     * @param \modules\Reservas\Entities\Reserva $reserva
+     * @param \Illuminate\Http\Request $request
+     * @return \modules\Reservas\Entities\Reserva
+     */
+    
     public function asignarDatosReserva(Reserva $reserva, Request $request)
     {
         $reserva->fecha      = $request->input('fecha');
