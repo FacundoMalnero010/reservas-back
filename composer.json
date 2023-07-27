@@ -22,6 +22,7 @@
     },
     "autoload": {
         "classmap": [
+            "app/Models/Entities/Eloquent/",
             "modules/Reservas/Entities/",
             "modules/Reservas/Http/Controllers/V1/",
             "app/Http/Controllers/",

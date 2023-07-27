@@ -2,22 +2,9 @@
 
 namespace modules\Reservas\Entities;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Entities\Eloquent\ReservaApp;
 
-class Reserva extends Model
+class Reserva extends ReservaApp
 {
-    use HasFactory;
-
-    public $table = 'reservas';
-    public $timestamps = false;
-
-    public $fillable = [
-        'id',
-        'fecha',
-        'horario',
-        'comensales',
-        'email',
-        'nombre',
-    ];
+    
 }
