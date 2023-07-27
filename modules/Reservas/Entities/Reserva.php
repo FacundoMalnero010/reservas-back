@@ -10,6 +10,7 @@ class Reserva extends Model
     use HasFactory;
 
     public $table = 'reservas';
+    public $timestamps = false;
 
     public $fillable = [
         'id',

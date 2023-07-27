@@ -72,6 +72,8 @@ class ReservasRepository extends EloquentRepository
 
         //Si existe la reserva, la misma es modificada
         $this->asignarDatosReserva($reserva, $request);
+        
+        $reserva->save();
         return $reserva;
     }
 

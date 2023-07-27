@@ -134,7 +134,7 @@ class ReservasService
     {
         return Validator::make($data, [
            'fecha'      => 'required|date',
-           'horario'    => 'required|time',
+           'horario'    => 'required|date_format:H:i',
            'comensales' => 'required|numeric|digits_between:1,12',
            'email'      => 'required|string',
            'nombre'     => 'required|string'
