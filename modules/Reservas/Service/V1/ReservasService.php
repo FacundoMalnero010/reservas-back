@@ -58,6 +58,18 @@ class ReservasService
     }
 
     /**
+     * Recibe una colección de horarios y los retorna
+     * 
+     * @param date $fecha
+     * @return time[]
+     */
+
+    public function getHorariosReservados($fecha)
+    {
+        return $this->reservasRepository->getHorariosReservados($fecha);
+    }
+
+    /**
      * Valida los datos de reserva, se recibe la reserva almacenada
      * y se retorna el dto
      * 

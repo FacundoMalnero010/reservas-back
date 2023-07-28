@@ -38,6 +38,18 @@ class ReservasRepository extends EloquentRepository
     }
 
     /**
+     * Consulta y retorna los horarios reservados de un dia
+     * 
+     * @param date $fecha
+     * @return time[]
+     */
+
+    public function getHorariosReservados($fecha)
+    {
+        return Reserva::whereDate('fecha', $fecha)->pluck('horario');
+    }
+
+    /**
      * Almacena una reserva
      * 
      * @param \Illuminate\Http\Request $request

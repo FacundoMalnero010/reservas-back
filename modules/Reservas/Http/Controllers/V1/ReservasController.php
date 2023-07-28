@@ -54,6 +54,20 @@ class ReservasController extends Controller
     }
 
     /**
+     * Recibe una colección de horarios y devuelve una respuesta json
+     * 
+     * @param date $fecha
+     * @return \Illuminate\Http\JsonResponse
+     */
+
+    public function getHorariosReservados($fecha)
+    {
+        $horarios = $this->reservasService->getHorariosReservados($fecha);
+
+        return $this->apiResponseDto->response(ResponseAlias::HTTP_OK, $horarios);
+    }
+
+    /**
      * Recibe un dto de reserva y devuelve una respuesta json
      * 
      * @param \Illuminate\Http\Request $request
