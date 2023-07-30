@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 
 //Rutas para las reservas
 require __DIR__.'../../modules/Reservas/routes/api.php';
+//Rutas para las consultas
+require __DIR__.'../../modules/Consultas/routes/api.php';
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

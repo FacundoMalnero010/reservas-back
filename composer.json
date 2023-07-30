@@ -23,14 +23,20 @@
     "autoload": {
         "classmap": [
             "app/Models/Entities/Eloquent/",
-            "modules/Reservas/Entities/",
-            "modules/Reservas/Http/Controllers/V1/",
             "app/Http/Controllers/",
-            "modules/Reservas/Service/V1/",
-            "modules/Reservas/Repository/V1/",
             "app/Repository/",
             "modules/Reservas/Dto/V1/",
-            "modules/Reservas/routes/"
+            "modules/Reservas/Entities/",
+            "modules/Reservas/Http/Controllers/V1/",
+            "modules/Reservas/Service/V1/",
+            "modules/Reservas/Repository/V1/",
+            "modules/Reservas/routes/",
+            "modules/Consultas/Dto/V1/",
+            "modules/Consultas/Entities/",
+            "modules/Consultas/Http/Controllers/V1/",
+            "modules/Consultas/Service/V1/",
+            "modules/Consultas/Repository/V1/",
+            "modules/Consultas/routes/"
         ],
         "psr-4": {
             "App\\": "app/",

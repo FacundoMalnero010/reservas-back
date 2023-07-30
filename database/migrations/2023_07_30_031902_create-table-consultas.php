@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reservas', function (Blueprint $tabla){
+        Schema::create('consultas', function(Blueprint $tabla){
             $tabla->id();
-            $tabla->date('fecha');
-            $tabla->time('horario');
-            $tabla->tinyInteger('comensales');
             $tabla->string('nombre');
+            $tabla->string('apellido');
             $tabla->string('email');
+            $tabla->string('consulta');
             $tabla->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reservas');
+        Schema::dropIfExists('consultas');
     }
 };

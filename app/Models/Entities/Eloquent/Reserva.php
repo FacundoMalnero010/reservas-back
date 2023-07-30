@@ -10,7 +10,7 @@ class ReservaApp extends Model
     use HasFactory;
 
     public $table = 'reservas';
-    public $timestamps = false;
+    public $timestamps = 'false';
 
     public $fillable = [
         'id',
@@ -19,5 +19,7 @@ class ReservaApp extends Model
         'comensales',
         'email',
         'nombre',
+        'created_at',
+        'updated_at'
     ];
 }

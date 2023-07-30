@@ -45,12 +45,7 @@ class ReservasController extends Controller
     public function get($id)
     {
         $reserva = $this->reservasService->get($id);
-
-        if($reserva instanceof ModelNotFoundException){
-            return $this->apiResponseDto->responseError(ResponseAlias::HTTP_NOT_FOUND);
-        }
-
-        return $this->apiResponseDto->response(ResponseAlias::HTTP_OK, $reserva);
+        return $this->gestionarRetorno($reserva, 404);
     }
 
     /**
@@ -78,12 +73,7 @@ class ReservasController extends Controller
     public function store(Request $request)
     {
         $reserva = $this->reservasService->store($request);
-
-        if($reserva instanceof ValidationException){
-            return $this->apiResponseDto->responseError(423);
-        }
-
-        return $this->apiResponseDto->response(ResponseAlias::HTTP_OK, $reserva);
+        return $this->gestionarRetorno($reserva, 423);
     }
 
     /**
@@ -117,11 +107,28 @@ class ReservasController extends Controller
     public function destroy($id)
     {
         $reserva = $this->reservasService->destroy($id);
+        return $this->gestionarRetorno($reserva, 404);
+    }
 
-        if($reserva instanceof ModelNotFoundException){
-            return $this->apiResponseDto->responseError(ResponseAlias::HTTP_NOT_FOUND);
+    //********************** Funciones auxiliares *************************
+
+    /**
+     * Verifica si la respuesta es una excepción o no y
+     * devuelve lo correspondiente
+     * 
+     * @param \modules\Reservas\Dto\V1\ReservaDto $response
+     * @param int $posibleCodError
+     * @return \Illuminate\Http\JsonResponse
+     */
+
+    public function gestionarRetorno($response,$posibleCodError)
+    {
+        if($response instanceof ModelNotFoundException)
+        {
+            return $this->apiResponseDto->responseError($posibleCodError);
         }
-
-        return $this->apiResponseDto->response(ResponseAlias::HTTP_OK, $reserva);
+        else{
+            return $this->apiResponseDto->response(ResponseAlias::HTTP_OK, $response);
+        }
     }
 }
