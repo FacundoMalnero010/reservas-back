@@ -58,7 +58,7 @@ class ConsultasController extends Controller
     public function store(Request $request)
     {
         $consulta = $this->consultasService->store($request);
-        return $this->gestionarRetorno($consulta, 404);
+        return $this->gestionarRetorno($consulta, 423);
     }
 
     /* No se usa aún
@@ -95,7 +95,7 @@ class ConsultasController extends Controller
 
     public function gestionarRetorno($response,$posibleCodError)
     {
-        if($response instanceof ModelNotFoundException)
+        if($response instanceof ModelNotFoundException || $response instanceof ValidationException)
         {
             return $this->apiResponseDto->responseError($posibleCodError);
         }
