@@ -38,7 +38,7 @@ class ConsultasController extends Controller
      * 
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
-     * @throws ModelNotFound
+     * @throws ModelNotFoundException
      */
 
     public function get($id)
@@ -73,7 +73,7 @@ class ConsultasController extends Controller
      * 
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
-     * @throws ModelNotFound
+     * @throws ModelNotFoundException
      */
 
     public function destroy($id)

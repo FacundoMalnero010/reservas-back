@@ -3,6 +3,8 @@
 namespace modules\Consultas\Repository\V1;
 
 use app\Repository\EloquentRepository;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use modules\Consultas\Entities\Consulta;
 use Carbon\Carbon;
@@ -30,7 +32,7 @@ class ConsultasRepository extends EloquentRepository
      * 
      * @param int $id
      * @return \modules\Consultas\Entities\Consulta
-     * @throws ModelNotFound
+     * @throws ModelNotFoundException
      */
 
     public function get($id)
@@ -47,8 +49,7 @@ class ConsultasRepository extends EloquentRepository
 
     public function store(Request $request)
     {
-        //Se obtiene el modelo
-        $consulta = $this->getModel();
+        $consulta = new Consulta;
         
         $consultaModificada = $this->asignarDatosConsulta($consulta,$request);
         $consultaModificada->save();
@@ -68,7 +69,7 @@ class ConsultasRepository extends EloquentRepository
      * 
      * @param int $id
      * @return \modules\Consultas\Entities\Consulta
-     * @throws ModelNotFound
+     * @throws ModelNotFoundException
      */
 
     public function destroy($id)

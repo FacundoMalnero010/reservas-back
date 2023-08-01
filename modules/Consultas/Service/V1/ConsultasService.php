@@ -45,7 +45,7 @@ class ConsultasService
      * 
      * @param int $id
      * @return \modules\Consultas\Dto\V1\ConsultaDto
-     * @throws ModelNotFound
+     * @throws ModelNotFoundException
      * @uses verificarInstanciaModeloNotFound($consulta)
      */
 
@@ -93,8 +93,8 @@ class ConsultasService
      * Recibe una consulta eliminada y se retorna el dto
      * 
      * @param int $id
-     * @return \modules\Consulta\Dto\V1\ConsultaDto
-     * @throws ModelNotFound
+     * @return \modules\Consultas\Dto\V1\ConsultaDto
+     * @throws ModelNotFoundException
      * @uses verificarInstanciaModelNotFound($consulta)
      */
 
