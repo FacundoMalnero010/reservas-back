@@ -121,7 +121,7 @@ class ConsultasService
         return Validator::make($data, [
             'nombre'   => 'required|string',
             'apellido' => 'required|string',
-            'email'    => 'required|string',
+            'correo'    => 'required|string',
             'consulta' => 'required|string',
         ]);  
     }

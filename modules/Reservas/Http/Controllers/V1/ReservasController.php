@@ -123,7 +123,7 @@ class ReservasController extends Controller
 
     public function gestionarRetorno($response,$posibleCodError)
     {
-        if($response instanceof ModelNotFoundException)
+        if($response instanceof ModelNotFoundException || $response instanceof ValidationException)
         {
             return $this->apiResponseDto->responseError($posibleCodError);
         }

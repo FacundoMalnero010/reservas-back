@@ -50,9 +50,10 @@ class ConsultasRepository extends EloquentRepository
         //Se obtiene el modelo
         $consulta = $this->getModel();
         
-        $this->asignarDatosConsulta($consulta,$request);
+        $consultaModificada = $this->asignarDatosConsulta($consulta,$request);
+        $consultaModificada->save();
 
-        return $consulta;
+        return $consultaModificada;
     }
 
     /* No es necesaria aún
@@ -80,6 +81,8 @@ class ConsultasRepository extends EloquentRepository
     //********************** Funciones auxiliares *************************
 
     /**
+     * Asigna los datos de un request al modelo consulta recibido y lo retorna
+     * 
      * @param \modules\Consultas\Entities\Consulta
      * @param \Illuminate\Http\Request $request
      * @return \modules\Consultas\Entities\Consulta
@@ -87,11 +90,11 @@ class ConsultasRepository extends EloquentRepository
 
     public function asignarDatosConsulta(Consulta $consulta, Request $request)
     {
-        $consulta->nombre = $request->input('nombre');
+        $consulta->nombre   = $request->input('nombre');
         $consulta->apellido = $request->input('apellido');
-        $consulta->email = $request->input('email');
+        $consulta->email    = $request->input('correo');
         $consulta->consulta = $request->input('consulta');
-        $consulta->save();
+        return $consulta;
     }
 
 }
