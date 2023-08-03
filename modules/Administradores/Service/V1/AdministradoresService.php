@@ -35,7 +35,7 @@ class AdministradoresService
         //para luego ser almacenados en el array y devueltos
         foreach($adminsBBDD as $adminBBDD)
         {
-            $adminBBDD[] = new AdministradoresDto($adminBBDD->toArray());
+            $administradores[] = new AdministradoresDto($adminBBDD->toArray());
         }
 
         return $administradores;
@@ -140,7 +140,7 @@ class AdministradoresService
         ]);
     }
 
-    public function verificarInstanciaModelNotFound(mixed $a) : ModelNotFoundException | null
+    public function verificarInstanciaModelNotFound(mixed $a)
     {
         $a instanceof ModelNotFoundException ? (throw new ModelNotFoundException('')) : null;
     }

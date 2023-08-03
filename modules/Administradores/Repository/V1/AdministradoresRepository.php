@@ -31,7 +31,7 @@ class AdministradoresRepository extends EloquentRepository
      * Consulta y retorna un administrador
      *
      * @param int $id
-     * @return \modules\Administradores\Entities\Administrador
+     * @return Administrador
      * @throws ModelNotFoundException
      */
 
@@ -45,14 +45,14 @@ class AdministradoresRepository extends EloquentRepository
      *
      * @param Request $request
      * @uses asignarDatosAdmin($administrador,$request)
-     * @return \modules\Administradores\Entities\Administrador
+     * @return Administrador
      */
 
     public function store(Request $request) : Administrador
     {
         $administrador = new Administrador;
         $adminConDatos = $this->asignarDatosAdmin($administrador,$request);
-        $adminFinal    = $this->generarUsuario($adminConDatos);
+        $adminFinal    = $this->generarUsuario($adminConDatos, false);
         $adminFinal->save();
 
         return $adminFinal;
@@ -69,9 +69,11 @@ class AdministradoresRepository extends EloquentRepository
 
     public function update(Request $request, int $id) : Administrador
     {
-        $administrador = Administrador::findOrFail($id);
+        $administrador   = Administrador::findOrFail($id);
         $adminModificado = $this->asignarDatosAdmin($administrador,$request);
-        return $administrador;
+        $adminFinal      = $this->generarUsuario($adminModificado, true);
+        $adminFinal->save();
+        return $adminFinal;
     }
 
     /**
@@ -86,6 +88,7 @@ class AdministradoresRepository extends EloquentRepository
     {
         $administrador = Administrador::findOrFail($id);
         $administrador->estado = 'B';
+        $administrador->save();
         return $administrador;
     }
 
@@ -112,18 +115,24 @@ class AdministradoresRepository extends EloquentRepository
      * Genera un usuario para un admin y retorna este último
      *
      * @param Administrador $administrador
+     * @param bool $esUpdate
      * @return Administrador
      */
 
-    public function generarUsuario(Administrador $administrador) : Administrador
+    public function generarUsuario(Administrador $administrador, bool $esUpdate) : Administrador
     {
-        $idUltimoAdmin = Administrador::latest('id')->value('id');
-        if($idUltimoAdmin !== null) {
-            $administrador->usuario = $administrador->nombre . $administrador->apellido . ($idUltimoAdmin + 1);
+        if(!$esUpdate) {
+            $idUltimoAdmin = Administrador::latest('id')->value('id');
+            if ($idUltimoAdmin !== null) {
+                $administrador->usuario = $administrador->nombre . $administrador->apellido . ($idUltimoAdmin + 1);
+            } else {
+                $administrador->usuario = $administrador->nombre . $administrador->apellido . 1;
+            }
         }
-        else{
-            $administrador->usuario = $administrador->nombre . $administrador->apellido . 1;
+        else {
+            $administrador->usuario = $administrador->nombre . $administrador->apellido . $administrador->id;
         }
+
         return $administrador;
     }
 

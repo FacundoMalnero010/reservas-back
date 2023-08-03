@@ -2,13 +2,17 @@
 
 namespace App\Models\Entities\Eloquent;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AdministradorApp extends Model
 {
+
+    use HasFactory;
+
     public $table = 'administradores';
 
-    protected $fillable = [
+    public $fillable = [
         'id',
         'nombre',
         'apellido',
@@ -17,4 +21,5 @@ class AdministradorApp extends Model
         'updated_at',
         'estado',
     ];
+
 }
