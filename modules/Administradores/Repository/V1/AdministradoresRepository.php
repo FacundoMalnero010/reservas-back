@@ -24,7 +24,9 @@ class AdministradoresRepository extends EloquentRepository
 
     public function index() : Collection
     {
-        return Administrador::all();
+        $administradores   = Administrador::all();
+        $adminsSinPassword = $administradores->makeHidden('password');
+        return $adminsSinPassword;
     }
 
     /**
@@ -37,7 +39,10 @@ class AdministradoresRepository extends EloquentRepository
 
     public function get(int $id) : Administrador
     {
-        return Administrador::findOrFail($id);
+        $administrador    = Administrador::findOrFail($id);
+        $this->verificarInstanciaModelNotFound($administrador);
+        $adminSinPassword = $administrador->makeHidden('password');
+        return $adminSinPassword;
     }
 
     /**
@@ -134,6 +139,18 @@ class AdministradoresRepository extends EloquentRepository
         }
 
         return $administrador;
+    }
+
+    /**
+     * Recibe una variable y tira una excepción de ModelNotFound en caso de serlo
+     *
+     * @param mixed $a
+     * @throws ModelNotFoundException
+     */
+
+    public function verificarInstanciaModelNotFound(mixed $a) : void
+    {
+        $a instanceof ModelNotFoundException ? (throw new ModelNotFoundException('')) : null;
     }
 
 }

@@ -64,7 +64,7 @@ class AdministradoresService
      * y se retorna el dto
      *
      * @param Request $request
-     * @return \modules\Administradores\Dto\V1\AdministradoresDto
+     * @return AdministradoresDto
      * @throws ValidationException
      * @uses validarAdmin($request)
      */
@@ -88,7 +88,7 @@ class AdministradoresService
      *
      * @param Request $request
      * @param int $id
-     * @return \modules\Administradores\Dto\V1\AdministradoresDto
+     * @return AdministradoresDto
      * @throws ModelNotFoundException
      * @throws ValidationException
      */
@@ -111,7 +111,7 @@ class AdministradoresService
      * Recibe un admin dado de baja y se retorna el dto
      *
      * @param int $id
-     * @return \modules\Administradores\Dto\V1\AdministradoresDto
+     * @return AdministradoresDto
      * @throws ModelNotFoundException
      */
 
@@ -140,7 +140,14 @@ class AdministradoresService
         ]);
     }
 
-    public function verificarInstanciaModelNotFound(mixed $a)
+    /**
+     * Recibe una variable y tira una excepción de ModelNotFound en caso de serlo
+     *
+     * @param mixed $a
+     * @throws ModelNotFoundException
+     */
+
+    public function verificarInstanciaModelNotFound(mixed $a) : void
     {
         $a instanceof ModelNotFoundException ? (throw new ModelNotFoundException('')) : null;
     }

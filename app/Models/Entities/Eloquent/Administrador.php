@@ -22,4 +22,6 @@ class AdministradorApp extends Model
         'estado',
     ];
 
+    protected $hidden = ['password'];
+
 }

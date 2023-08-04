@@ -18,39 +18,39 @@ class ConsultasRepository extends EloquentRepository
 
     /**
      * Consulta y retorna todas las consultas almacenadas
-     * 
+     *
      * @return Collection
      */
 
-    public function index()
+    public function index() : Collection
     {
         return Consulta::all();
     }
 
     /**
      * Consulta y retorna una consulta almacenada
-     * 
+     *
      * @param int $id
-     * @return \modules\Consultas\Entities\Consulta
+     * @return Consulta
      * @throws ModelNotFoundException
      */
 
-    public function get($id)
+    public function get(int $id) : Consulta
     {
         return Consulta::findOrFail($id);
     }
 
     /**
      * Almacena una consulta
-     * 
-     * @param \Illuminate\Http\Request $request
-     * @return \modules\Consultas\Entities\Consulta
+     *
+     * @param Request $request
+     * @return Consulta
      */
 
-    public function store(Request $request)
+    public function store(Request $request) : Consulta
     {
         $consulta = new Consulta;
-        
+
         $consultaModificada = $this->asignarDatosConsulta($consulta,$request);
         $consultaModificada->save();
 
@@ -66,13 +66,13 @@ class ConsultasRepository extends EloquentRepository
 
     /**
      * Hace la baja física de una consulta
-     * 
+     *
      * @param int $id
-     * @return \modules\Consultas\Entities\Consulta
+     * @return Consulta
      * @throws ModelNotFoundException
      */
 
-    public function destroy($id)
+    public function destroy(int $id) : Consulta
     {
         $consulta = Consulta::findOrFail($id);
         $consulta->delete();
@@ -83,10 +83,10 @@ class ConsultasRepository extends EloquentRepository
 
     /**
      * Asigna los datos de un request al modelo consulta recibido y lo retorna
-     * 
-     * @param \modules\Consultas\Entities\Consulta
-     * @param \Illuminate\Http\Request $request
-     * @return \modules\Consultas\Entities\Consulta
+     *
+     * @param Consulta $consulta
+     * @param Request $request
+     * @return Consulta
      */
 
     public function asignarDatosConsulta(Consulta $consulta, Request $request)
