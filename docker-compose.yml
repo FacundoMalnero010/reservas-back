@@ -1,0 +1,61 @@
+version: "1"
+services:
+    php:
+        build:
+            context: './Docker/php/'
+        environment:
+            PHP_VERSION: ${PHP_VERSION}
+            PROJECT_NAME: ${PROJECT_NAME}
+        networks:
+            - php
+        volumes:
+            - ${PROJECT_ROOT}/:/var/www/html/${PROJECT_NAME}/
+        container_name: php
+        working_dir: /var/www/html/${PROJECT_NAME}/
+
+    apache:
+        image: httpd:latest
+        build:
+            context: './Docker/apache/'
+            args:
+                APACHE_VERSION: ${APACHE_VERSION}
+        environment:
+            - BACKEND_INDEX_DIRECTORY=${BACKEND_INDEX_DIRECTORY}
+        depends_on:
+            - php
+        networks:
+            - apache
+            - php
+        ports:
+            - "8080:8080"
+        volumes:
+            - ${PROJECT_ROOT}/:/var/www/html/${PROJECT_NAME}/
+        container_name: apache_${PROJECT_NAME}
+    db:
+        container_name: db
+        image: mysql:latest
+        environment:
+            MYSQL_DATABASE: reservas
+
+            MYSQL_USER: facu
+
+            MYSQL_PASSWORD: password
+
+            MYSQL_ROOT_PASSWORD: root
+        networks:
+            - apache
+            - php
+
+    adminer:
+        image: adminer
+        ports:
+        - "8081:8080"
+        networks:
+        - apache
+
+networks:
+  apache:
+  php:
+
+volumes:
+  db-data:
