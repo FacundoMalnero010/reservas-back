@@ -15,7 +15,7 @@ return new class extends Migration
             $tabla->id();
             $tabla->string('nombre');
             $tabla->string('apellido');
-            $tabla->bigInteger('usuario');
+            $tabla->string('usuario');
             $tabla->string('password');
             $tabla->timestamps();
             $tabla->string('estado');

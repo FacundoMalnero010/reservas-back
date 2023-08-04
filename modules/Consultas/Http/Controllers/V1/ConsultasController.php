@@ -5,8 +5,10 @@ namespace modules\Consultas\Http\Controllers\V1;
 use App\Dto\ApiResponseDto;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use modules\Consultas\Dto\V1\ConsultaDto;
 use modules\Consultas\Service\V1\ConsultasService;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
@@ -24,24 +26,26 @@ class ConsultasController extends Controller
 
     /**
      * Recibe un array de dto's de consultas y devuelve una respuesta json
-     * 
-     * @return \Illuminate\Http\JsonResponse
+     *
+     * @return JsonResponse
      */
 
-    public function index(){
+    public function index() : JsonResponse
+    {
         $consultas = $this->consultasService->index();
         return $this->apiResponseDto->response(ResponseAlias::HTTP_OK, $consultas, (count($consultas) > 0) ? null : 'No hay consultas aún');
     }
 
     /**
      * Recibe un dto de consulta y devuelve una respuesta json
-     * 
+     *
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws ModelNotFoundException
+     * @uses gestionarRetorno($consulta, 404)
      */
 
-    public function get($id)
+    public function get(int $id) : JsonResponse
     {
         $consulta = $this->consultasService->get($id);
         return $this->gestionarRetorno($consulta, 404);
@@ -49,13 +53,14 @@ class ConsultasController extends Controller
 
     /**
      * Recibe un dto de consulta y devuelve una respuesta json
-     * 
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
+     *
+     * @param Request $request
+     * @return JsonResponse
      * @throws ValidationException
+     * @uses gestionarRetorno($consulta, 423)
      */
 
-    public function store(Request $request)
+    public function store(Request $request) : JsonResponse
     {
         $consulta = $this->consultasService->store($request);
         return $this->gestionarRetorno($consulta, 423);
@@ -70,13 +75,14 @@ class ConsultasController extends Controller
 
     /**
      * Recibe un dto de consulta y devuelve una respuesta json
-     * 
+     *
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws ModelNotFoundException
+     * @uses gestionarRetorno($consulta, 404)
      */
 
-    public function destroy($id)
+    public function destroy(int $id) : JsonResponse
     {
         $consulta = $this->consultasService->destroy($id);
         return $this->gestionarRetorno($consulta, 404);
@@ -87,13 +93,13 @@ class ConsultasController extends Controller
     /**
      * Verifica si la respuesta es una excepción o no y
      * devuelve lo correspondiente
-     * 
-     * @param \modules\Consultas\Dto\V1\ConsultaDto $response
+     *
+     * @param ConsultaDto $response
      * @param int $posibleCodError
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
 
-    public function gestionarRetorno($response,$posibleCodError)
+    public function gestionarRetorno(ConsultaDto $response,int $posibleCodError) : JsonResponse
     {
         if($response instanceof ModelNotFoundException || $response instanceof ValidationException)
         {

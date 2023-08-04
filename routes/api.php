@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 require __DIR__.'../../modules/Reservas/routes/api.php';
 //Rutas para las consultas
 require __DIR__.'../../modules/Consultas/routes/api.php';
+//Rutas para los admin
+require __DIR__.'../../modules/Administradores/routes/api.php';
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

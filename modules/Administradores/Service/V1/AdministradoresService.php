@@ -21,11 +21,11 @@ class AdministradoresService
 
     /**
      * Recibe una colección de todos los administradores y retorna un array de Dto's de los mismos
-     * 
+     *
      * @return \modules\Administradores\Dto\V1\AdministradoresDto[]
      */
 
-    public function index()
+    public function index() : array
     {
         $adminsBBDD = $this->administradoresRepository->index();
 
@@ -35,7 +35,7 @@ class AdministradoresService
         //para luego ser almacenados en el array y devueltos
         foreach($adminsBBDD as $adminBBDD)
         {
-            $adminBBDD[] = new AdministradoresDto($adminBBDD->toArray());
+            $administradores[] = new AdministradoresDto($adminBBDD->toArray());
         }
 
         return $administradores;
@@ -43,14 +43,14 @@ class AdministradoresService
 
     /**
      * Recibe un admin y retorna el dto
-     * 
+     *
      * @param int $id
      * @return \modules\Administradores\Dto\V1\AdministradoresDto
      * @throws ModelNotFoundException
      * @uses verificarInstanciaModelNotFound($admin)
      */
 
-    public function get($id)
+    public function get(int $id) : AdministradoresDto
     {
         $admin = $this->administradoresRepository->get($id);
 
@@ -62,14 +62,14 @@ class AdministradoresService
     /**
      * Valida los datos de un admin, se recibe el admin almacenado
      * y se retorna el dto
-     * 
+     *
      * @param Request $request
-     * @return \modules\Administradores\Dto\V1\AdministradoresDto
+     * @return AdministradoresDto
      * @throws ValidationException
      * @uses validarAdmin($request)
      */
 
-    public function store(Request $request)
+    public function store(Request $request) : AdministradoresDto
     {
         $validator = $this->validarAdmin($request->all());
 
@@ -85,15 +85,15 @@ class AdministradoresService
     /**
      * Valida los nuevos datos de un admin, se modifica el almacenado
      * y se retorna el dto
-     * 
+     *
      * @param Request $request
      * @param int $id
-     * @return \modules\Administradores\Dto\V1\AdministradoresDto
+     * @return AdministradoresDto
      * @throws ModelNotFoundException
      * @throws ValidationException
      */
 
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id) : AdministradoresDto
     {
         $validator = $this->validarAdmin($request->all());
 
@@ -109,13 +109,13 @@ class AdministradoresService
 
     /**
      * Recibe un admin dado de baja y se retorna el dto
-     * 
+     *
      * @param int $id
-     * @return \modules\Administradores\Dto\V1\AdministradoresDto
+     * @return AdministradoresDto
      * @throws ModelNotFoundException
      */
 
-    public function destroy($id)
+    public function destroy(int $id) : AdministradoresDto
     {
         $result = $this->administradoresRepository->destroy($id);
         $this->verificarInstanciaModelNotFound($result);
@@ -126,21 +126,28 @@ class AdministradoresService
 
     /**
      * Recibe los datos de un admin y los valida
-     * 
+     *
      * @param array $data
      * @return \Illuminate\Validation\Validator
      */
 
-    public function validarAdmin(array $data)
+    public function validarAdmin(array $data) : \Illuminate\Validation\Validator
     {
         return Validator::make($data, [
             'nombre' => 'required|string',
             'apellido' => 'required|string',
-            'password' => 'required|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/|min:6',
+            'password' => 'required|min:6',
         ]);
     }
-    
-    public function verificarInstanciaModelNotFound($a)
+
+    /**
+     * Recibe una variable y tira una excepción de ModelNotFound en caso de serlo
+     *
+     * @param mixed $a
+     * @throws ModelNotFoundException
+     */
+
+    public function verificarInstanciaModelNotFound(mixed $a) : void
     {
         $a instanceof ModelNotFoundException ? (throw new ModelNotFoundException('')) : null;
     }

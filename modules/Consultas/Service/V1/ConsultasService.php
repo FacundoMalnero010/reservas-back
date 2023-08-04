@@ -20,11 +20,11 @@ class ConsultasService
 
     /**
      * Recibe una colección de todas las consultas y retorna un array de Dto's de las mismas
-     * 
-     * @return \modules\Consultas\Dto\V1\ConsultaDto[]
+     *
+     * @return ConsultaDto[]
      */
 
-    public function index()
+    public function index() : ConsultaDto
     {
         $consultasBBDD = $this->consultasRepository->index();
 
@@ -42,14 +42,14 @@ class ConsultasService
 
     /**
      * Recibe una consulta y retorna el dto
-     * 
+     *
      * @param int $id
-     * @return \modules\Consultas\Dto\V1\ConsultaDto
+     * @return ConsultaDto
      * @throws ModelNotFoundException
      * @uses verificarInstanciaModeloNotFound($consulta)
      */
 
-    public function get($id)
+    public function get(int $id) : ConsultaDto
     {
         $consulta = $this->consultasRepository->get($id);
 
@@ -61,18 +61,17 @@ class ConsultasService
     /**
      * Valida los datos de consulta, se recibe la consulta almacenada
      * y se retorna el dto
-     * 
-     * @param \Illuminate\Http\Request $request
-     * @return \modules\Consultas\Dto\V1\ConsultaDto
+     *
+     * @param Request $request
+     * @return ConsultaDto
      * @throws ValidationException
      * @uses validarConsulta($request)
      */
 
-    public function store(Request $request)
+    public function store(Request $request) : ConsultaDto
     {
         $validator = $this->validarConsulta($request->all());
 
-        //Si los datos no se validan se lanza una excepción
         if ($validator->fails()){
             throw new ValidationException($validator);
         }
@@ -91,14 +90,14 @@ class ConsultasService
 
     /**
      * Recibe una consulta eliminada y se retorna el dto
-     * 
+     *
      * @param int $id
-     * @return \modules\Consultas\Dto\V1\ConsultaDto
+     * @return ConsultaDto
      * @throws ModelNotFoundException
      * @uses verificarInstanciaModelNotFound($consulta)
      */
 
-    public function destroy($id)
+    public function destroy(int $id) : ConsultaDto
     {
         $consulta = $this->consultasRepository->destroy($id);
 
@@ -111,22 +110,29 @@ class ConsultasService
 
     /**
      * Recibe los datos de una consulta y los valida
-     * 
+     *
      * @param array $data
      * @return \Illuminate\Validation\Validator
      */
 
-    public function validarConsulta(array $data)
+    public function validarConsulta(array $data) : \Illuminate\Validation\Validator
     {
         return Validator::make($data, [
             'nombre'   => 'required|string',
             'apellido' => 'required|string',
             'correo'    => 'required|string',
             'consulta' => 'required|string',
-        ]);  
+        ]);
     }
 
-    public function verificarInstanciaModelNotFound($a)
+    /**
+     * Recibe una variable y tira una excepción de ModelNotFound en caso de serlo
+     *
+     * @param mixed $a
+     * @throws ModelNotFoundException
+     */
+
+    public function verificarInstanciaModelNotFound($a) : void
     {
         $a instanceof ModelNotFoundException ? (throw new ModelNotFoundException('')) : null;
     }

@@ -2,9 +2,9 @@
 
 namespace modules\Administradores\Entities;
 
-use App\Models\User;
+use App\Models\Entities\Eloquent\AdministradorApp;
 
-class Administrador extends User
+class Administrador extends AdministradorApp
 {
-    
+
 }

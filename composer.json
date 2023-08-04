@@ -36,7 +36,13 @@
             "modules/Consultas/Http/Controllers/V1/",
             "modules/Consultas/Service/V1/",
             "modules/Consultas/Repository/V1/",
-            "modules/Consultas/routes/"
+            "modules/Consultas/routes/",
+            "modules/Administradores/Dto/V1/",
+            "modules/Administradores/Entities/",
+            "modules/Administradores/Http/Controllers/V1/",
+            "modules/Administradores/Service/V1/",
+            "modules/Administradores/Repository/V1/",
+            "modules/Administradores/routes/"
         ],
         "psr-4": {
             "App\\": "app/",
