@@ -24,7 +24,7 @@ class ConsultasService
      * @return ConsultaDto[]
      */
 
-    public function index() : ConsultaDto
+    public function index() : array
     {
         $consultasBBDD = $this->consultasRepository->index();
 

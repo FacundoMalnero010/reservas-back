@@ -4,6 +4,7 @@ namespace modules\Consultas\Http\Controllers\V1;
 
 use App\Dto\ApiResponseDto;
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -94,12 +95,12 @@ class ConsultasController extends Controller
      * Verifica si la respuesta es una excepción o no y
      * devuelve lo correspondiente
      *
-     * @param ConsultaDto $response
+     * @param ConsultaDto|Exception $response
      * @param int $posibleCodError
      * @return JsonResponse
      */
 
-    public function gestionarRetorno(ConsultaDto $response,int $posibleCodError) : JsonResponse
+    public function gestionarRetorno(ConsultaDto|Exception $response, int $posibleCodError) : JsonResponse
     {
         if($response instanceof ModelNotFoundException || $response instanceof ValidationException)
         {

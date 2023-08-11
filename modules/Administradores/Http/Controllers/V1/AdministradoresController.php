@@ -57,7 +57,7 @@ class AdministradoresController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
-     * @uses gestionarRetorno($admin, 404)
+     * @uses gestionarRetorno($admin, 423)
      */
 
     public function store(Request $request) : JsonResponse
@@ -94,6 +94,19 @@ class AdministradoresController extends Controller
     {
         $admin = $this->administradoresService->destroy($id);
         return $this->gestionarRetorno($admin,404);
+    }
+
+    /**
+     * Permite el acceso al área de administración si matchean los datos
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function validarAdministrador(Request $request) : JsonResponse
+    {
+        $admin = $this->administradoresService->validarAdministrador($request);
+        return $admin ? $this->apiResponseDto->response(ResponseAlias::HTTP_OK) : $this->apiResponseDto->responseError(423);
     }
 
     //********************** Funciones auxiliares *************************

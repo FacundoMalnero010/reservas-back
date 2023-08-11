@@ -6,6 +6,7 @@ use app\Repository\EloquentRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use modules\Administradores\Entities\Administrador;
 use Carbon\Carbon;
 
@@ -55,7 +56,7 @@ class AdministradoresRepository extends EloquentRepository
 
     public function store(Request $request) : Administrador
     {
-        $administrador = new Administrador;
+        $administrador = $this->getModel();
         $adminConDatos = $this->asignarDatosAdmin($administrador,$request);
         $adminFinal    = $this->generarUsuario($adminConDatos, false);
         $adminFinal->save();
@@ -95,6 +96,22 @@ class AdministradoresRepository extends EloquentRepository
         $administrador->estado = 'B';
         $administrador->save();
         return $administrador;
+    }
+
+    /**
+     * Valida los datos de un administrador para verificar que exista
+     *
+     * @param Request $request
+     * @return bool
+     */
+
+    public function validarAdministrador(Request $request) : bool
+    {
+        $administrador = Administrador::where('usuario',$request->input('usuario'))
+                                      ->where('password',bcrypt($request->input('password')))
+                                      ->first();
+
+        return isset($administrador);
     }
 
     //********************** Funciones auxiliares *************************

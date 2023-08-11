@@ -122,6 +122,25 @@ class AdministradoresService
         return new AdministradoresDto($result->toArray());
     }
 
+    /**
+     * Retorna si un administrador existe según el usuario y password recibidos
+     *
+     * @param Request $request
+     * @return bool|ValidationException
+     * @throws ValidationException
+     */
+
+    public function validarAdministrador(Request $request) : bool | ValidationException
+    {
+        $admin = $this->administradoresRepository->validarAdministrador($request);
+        if($admin) {
+            return true;
+        }
+        else {
+            throw new ValidationException('');
+        }
+    }
+
     //********************** Funciones auxiliares ***************************
 
     /**
@@ -136,7 +155,7 @@ class AdministradoresService
         return Validator::make($data, [
             'nombre' => 'required|string',
             'apellido' => 'required|string',
-            'password' => 'required|min:6',
+            'password' => 'required|string|min:6',
         ]);
     }
 
