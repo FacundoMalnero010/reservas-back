@@ -42,16 +42,15 @@ class AdministradoresRepository extends EloquentRepository
     {
         $administrador    = Administrador::findOrFail($id);
         $this->verificarInstanciaModelNotFound($administrador);
-        $adminSinPassword = $administrador->makeHidden('password');
-        return $adminSinPassword;
+        return $administrador->makeHidden('password');
     }
 
     /**
      * Almacena un administrador
      *
      * @param Request $request
-     * @uses asignarDatosAdmin($administrador,$request)
      * @return Administrador
+     *@uses asignarDatosAdmin($administrador,$request)
      */
 
     public function store(Request $request) : Administrador
@@ -102,16 +101,14 @@ class AdministradoresRepository extends EloquentRepository
      * Valida los datos de un administrador para verificar que exista
      *
      * @param Request $request
-     * @return bool
+     * @return Administrador|bool
      */
 
-    public function validarAdministrador(Request $request) : bool
+    public function validarAdministrador(Request $request) : Administrador|bool
     {
-        $administrador = Administrador::where('usuario',$request->input('usuario'))
-                                      ->where('password',bcrypt($request->input('password')))
-                                      ->first();
-
-        return isset($administrador);
+        return Administrador::where('usuario',$request->get('username'))
+                              ->where('password',$request->get('password'))
+                              ->firstOrFail();
     }
 
     //********************** Funciones auxiliares *************************

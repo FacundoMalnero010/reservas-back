@@ -42,7 +42,7 @@ class AdministradoresController extends Controller
      * @param int $id
      * @return JsonResponse
      * @throws ModelNotFoundException
-     * @uses gestionarRetorno($admin, 404)
+     * @uses gestionarRetorno
      */
 
     public function get(int $id) : JsonResponse
@@ -76,7 +76,7 @@ class AdministradoresController extends Controller
      * @uses gestionarRetorno($admin, 404)
      */
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id): JsonResponse
     {
         $admin = $this->administradoresService->update($request,$id);
         return $this->gestionarRetorno($admin,404,423);
@@ -90,7 +90,7 @@ class AdministradoresController extends Controller
      * @uses gestionarRetorno($admin, 404)
      */
 
-    public function destroy(int $id)
+    public function destroy(int $id): JsonResponse
     {
         $admin = $this->administradoresService->destroy($id);
         return $this->gestionarRetorno($admin,404);
@@ -101,12 +101,11 @@ class AdministradoresController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException
      */
     public function validarAdministrador(Request $request) : JsonResponse
     {
         $admin = $this->administradoresService->validarAdministrador($request);
-        return $admin ? $this->apiResponseDto->response(ResponseAlias::HTTP_OK) : $this->apiResponseDto->responseError(423);
+        return $admin ? $this->apiResponseDto->response(ResponseAlias::HTTP_OK) : $this->apiResponseDto->responseError(404);
     }
 
     //********************** Funciones auxiliares *************************
@@ -115,12 +114,13 @@ class AdministradoresController extends Controller
      * Verifica si la respuesta es una excepción o no y
      * devuelve lo correspondiente
      *
-     * @param AdministradoresDto $response
+     * @param mixed $response
      * @param int $posibleCodError
+     * @param int|null $segundoPosibleCodError
      * @return JsonResponse
      */
 
-     public function gestionarRetorno(AdministradoresDto $response,int $posibleCodError,int $segundoPosibleCodError = null)
+     public function gestionarRetorno(mixed $response,int $posibleCodError,int $segundoPosibleCodError = null) : JsonResponse
      {
          if($response instanceof ModelNotFoundException)
          {

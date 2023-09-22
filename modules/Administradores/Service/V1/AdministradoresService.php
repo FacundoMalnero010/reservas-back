@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use modules\Administradores\Dto\V1;
 use modules\Administradores\Dto\V1\AdministradoresDto;
+use modules\Administradores\Entities\Administrador;
 use modules\Administradores\Repository\V1\AdministradoresRepository;
 
 class AdministradoresService
@@ -126,19 +127,12 @@ class AdministradoresService
      * Retorna si un administrador existe según el usuario y password recibidos
      *
      * @param Request $request
-     * @return bool|ValidationException
-     * @throws ValidationException
+     * @return Administrador|bool
      */
 
-    public function validarAdministrador(Request $request) : bool | ValidationException
+    public function validarAdministrador(Request $request) : Administrador|bool
     {
-        $admin = $this->administradoresRepository->validarAdministrador($request);
-        if($admin) {
-            return true;
-        }
-        else {
-            throw new ValidationException('');
-        }
+        return $this->administradoresRepository->validarAdministrador($request);
     }
 
     //********************** Funciones auxiliares ***************************
