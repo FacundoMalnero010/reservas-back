@@ -3,11 +3,14 @@
 namespace modules\Administradores\Service\V1;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use modules\Administradores\Dto\V1;
 use modules\Administradores\Dto\V1\AdministradoresDto;
+use App\Models\User;
 use modules\Administradores\Entities\Administrador;
 use modules\Administradores\Repository\V1\AdministradoresRepository;
 
@@ -23,7 +26,7 @@ class AdministradoresService
     /**
      * Recibe una colección de todos los administradores y retorna un array de Dto's de los mismos
      *
-     * @return \modules\Administradores\Dto\V1\AdministradoresDto[]
+     * @return AdministradoresDto[]
      */
 
     public function index() : array
@@ -46,9 +49,9 @@ class AdministradoresService
      * Recibe un admin y retorna el dto
      *
      * @param int $id
-     * @return \modules\Administradores\Dto\V1\AdministradoresDto
+     * @return AdministradoresDto
      * @throws ModelNotFoundException
-     * @uses verificarInstanciaModelNotFound($admin)
+     * @uses verificarInstanciaModelNotFound
      */
 
     public function get(int $id) : AdministradoresDto
@@ -67,7 +70,7 @@ class AdministradoresService
      * @param Request $request
      * @return AdministradoresDto
      * @throws ValidationException
-     * @uses validarAdmin($request)
+     * @uses validarAdmin
      */
 
     public function store(Request $request) : AdministradoresDto
@@ -77,10 +80,8 @@ class AdministradoresService
         if($validator->fails()){
             throw new ValidationException($validator);
         }
-        else{
-            $result = $this->administradoresRepository->store($request);
-            return new AdministradoresDto($result->toArray());
-        }
+
+        return new AdministradoresDto((array)$this->administradoresRepository->store($request));
     }
 
     /**
@@ -92,7 +93,7 @@ class AdministradoresService
      * @return AdministradoresDto
      * @throws ModelNotFoundException
      * @throws ValidationException
-     */
+    */
 
     public function update(Request $request, int $id) : AdministradoresDto
     {
@@ -124,15 +125,64 @@ class AdministradoresService
     }
 
     /**
-     * Retorna si un administrador existe según el usuario y password recibidos
+     * Valida los datos de un administrador y, en caso de error, los retorna
      *
      * @param Request $request
-     * @return Administrador|bool
+     * @return AdministradoresDto|RedirectResponse|bool
+     * @throws ModelNotFoundException|ValidationException
+     * @uses AdministradoresRepository::login
      */
 
-    public function validarAdministrador(Request $request) : Administrador|bool
+    public function login(Request $request) : AdministradoresDto|RedirectResponse|bool
     {
-        return $this->administradoresRepository->validarAdministrador($request);
+
+        Validator::make($request->all(), [
+
+            'usuario'  => 'required|min:3|max:50|regex:/^[a-zA-Z0-9áéíóúüÁÉÍÓÚÜ]+$/',
+            'password' => 'required|min:3|max:50|regex:/^[a-zA-Z0-9áéíóúüÁÉÍÓÚÜ.¡!]+$/'
+
+        ],
+        [
+
+            'usuario.required'  => 'El campo usuario es obligatorio',
+            'usuario.min'       => 'El campo usuario debe tener un mínimo de 3 caracteres',
+            'usuario.max'       => 'El campo usuario debe tener un máximo de 50 caracteres',
+            'usuario.regex'     => 'El nombre de usuario no cumple con el formato requerido',
+            'password.required' => 'El campo contraseña es obligatorio',
+            'password.min'      => 'El campo contraseña debe tener un mínimo de 3 caracteres',
+            'password.max'      => 'El campo contraseña debe tener un máximo de 50 caracteres',
+            'password.regex'    => 'La contraseña no cumple con el formato requerido'
+
+        ])->validate();
+
+        try {
+
+            return $this->administradoresRepository->login($request);
+
+        }
+        catch (ModelNotFoundException $e) {
+
+            throw new ModelNotFoundException();
+
+        }
+    }
+
+    public function logout(Request $request)
+    {
+        return [Auth::user()];
+        /*if(!auth()->user()) {
+            return '0';
+        }
+
+        $tokenRecibido = $request->bearerToken();
+
+        if($tokenRecibido == session('access_token')) {
+            session()->forget('access_token');
+            \auth()->logout();
+            return '1';
+        }
+
+        return '2';*/
     }
 
     //********************** Funciones auxiliares ***************************
@@ -144,12 +194,13 @@ class AdministradoresService
      * @return \Illuminate\Validation\Validator
      */
 
-    public function validarAdmin(array $data) : \Illuminate\Validation\Validator
+    public function validarAdmin(array $data): \Illuminate\Validation\Validator
     {
         return Validator::make($data, [
-            'nombre' => 'required|string',
+            'nombre'   => 'required|string',
             'apellido' => 'required|string',
-            'password' => 'required|string|min:6',
+            'usuario'  => 'required|string|max:255|unique:administradores',
+            'password' => 'required|string|min:8'
         ]);
     }
 
@@ -162,7 +213,7 @@ class AdministradoresService
 
     public function verificarInstanciaModelNotFound(mixed $a) : void
     {
-        $a instanceof ModelNotFoundException ? (throw new ModelNotFoundException('')) : null;
+        $a instanceof ModelNotFoundException ?? throw new ModelNotFoundException('');
     }
 
 }

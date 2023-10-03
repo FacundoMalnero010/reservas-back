@@ -2,9 +2,9 @@
 
 namespace modules\Administradores\Entities;
 
-use App\Models\Entities\Eloquent\AdministradorApp;
+use App\Models\User;
 
-class Administrador extends AdministradorApp
+class Administrador extends User
 {
-
+    public $table = 'administradores';
 }

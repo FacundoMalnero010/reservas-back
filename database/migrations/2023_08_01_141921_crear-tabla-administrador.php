@@ -19,6 +19,8 @@ return new class extends Migration
             $tabla->string('password');
             $tabla->timestamps();
             $tabla->string('estado');
+            $tabla->rememberToken();
+            $tabla->string('logueado');
         });
     }
 

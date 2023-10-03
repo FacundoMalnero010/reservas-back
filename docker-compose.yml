@@ -30,6 +30,8 @@ services:
             - "8080:8080"
         volumes:
             - ${PROJECT_ROOT}/:/var/www/html/${PROJECT_NAME}/
+        mem_limit: 2g
+        cpus: 2
         container_name: apache_${PROJECT_NAME}
     db:
         container_name: db

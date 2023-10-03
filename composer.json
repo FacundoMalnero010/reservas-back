@@ -8,7 +8,8 @@
         "php": "^8.1",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
-        "laravel/sanctum": "^3.2",
+        "laravel/passport": "*",
+        "laravel/sanctum": "*",
         "laravel/tinker": "^2.8"
     },
     "require-dev": {
@@ -22,6 +23,8 @@
     },
     "autoload": {
         "classmap": [
+            "app/Models",
+            "app/Models/User",
             "app/Models/Entities/Eloquent/",
             "app/Http/Controllers/",
             "app/Repository/",
@@ -45,7 +48,7 @@
             "modules/Administradores/routes/"
         ],
         "psr-4": {
-            "App\\": "app/",
+            "App\\": "app/Models",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         }

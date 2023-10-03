@@ -1,0 +1,115 @@
+html,body,#contenedor{
+    width: 100vw;
+    height: 100vh;
+}
+
+#contenedor{
+    background: url(images/comida1.jpg) no-repeat center center;
+    background-size: cover;
+    filter: brightness(0.6);
+}
+
+#contenedorForm{
+    background-color: #252525;
+    animation: aparecer 1s ease-in-out forwards;
+}
+
+#contenedorForm *{
+    opacity: 0;
+    animation: mostrar 1s ease-in-out forwards;
+    animation-delay: 1.25s;
+}
+
+label{
+    margin-bottom: 2%;
+    margin-top: 5%;
+    color: aliceblue;
+    font-family: 'Open Sans';
+    font-size: larger;
+}
+
+h1{
+    color: rgb(255, 255, 165);
+    margin-bottom: 7%;
+    font-family: 'Playfair Display';
+    font-style: italic;
+    font-size: 300%;
+}
+
+h1,label,input{
+    user-select: none;
+}
+
+#submit{
+    background-color: rgb(255, 255, 165);
+    color: black;
+    margin-top: 5%;
+    font-weight: bold;
+    transition: all 1s ease;
+}
+
+#submit:hover{
+    background-color: rgb(255, 255, 50);
+}
+
+#noSubmit{
+    background-color: red;
+    margin-top: 5%;
+    color: aliceblue;
+}
+
+#submit.enviado{
+    background-color: rgb(255, 255, 165);
+    color: black;
+    margin-top: 5%;
+    font-weight: bold;
+    border-radius: 100%;
+    animation: aVerde 1s ease-in-out forwards;
+}
+
+#submit.enviado::before{
+    content: '\2714';
+    animation: tilde 1s ease-in-out forwards;
+}
+
+.ocupado{
+    background-color: darkred;
+    color: aliceblue;
+}
+
+@keyframes aparecer{
+    0%{
+        width: 5vw;
+        height: 5vh;
+        border-radius: 100%;
+    }
+    100%{
+        width: 30vw;
+        height: 65vh;
+        border-radius: 7%;
+    }
+}
+
+@keyframes mostrar{
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+@keyframes tilde{
+    100%{
+        color: rgb(243, 243, 243);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+    }
+}
+
+@keyframes aVerde{
+    100%{
+        background-color: #4dd039;
+    }
+}

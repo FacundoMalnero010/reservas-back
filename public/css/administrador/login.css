@@ -1,0 +1,49 @@
+*{
+  user-select: none;
+}
+
+body {
+  background-color: #222;
+  color: #fff;
+}
+
+#titulo {
+  color: rgb(160, 160, 69);
+}
+
+#cuadroLogin {
+  background-color: #333;
+  opacity: 0.95;
+  padding: 3%;
+  height: 65%;
+  border-radius: 10%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+#container{
+  height: 100vh;
+}
+
+#submit{
+  background-color: rgb(215, 215, 75);
+  border: rgb(215, 215, 75);
+  color: #222222;
+}
+
+#submit:hover{
+  background-color: rgba(160, 160, 69, 0.85);
+  border: rgba(160, 160, 69, 0.85);
+}
+
+/*
+  .login-header h2 {
+    color: #ffd700;
+  }
+  .login-btn {
+    background-color: #ffd700;
+    border: none;
+    color: #000;
+  }
+  .login-btn:hover {
+    background-color: #c0a700;
+  } */

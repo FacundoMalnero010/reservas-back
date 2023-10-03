@@ -4,10 +4,13 @@ namespace modules\Consultas\Http\Controllers\V1;
 
 use App\Dto\ApiResponseDto;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Kreait\Firebase\Factory;
 use modules\Administradores\Dto\V1\AdministradoresDto;
 use modules\Administradores\Service\V1\AdministradoresService;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -33,6 +36,7 @@ class AdministradoresController extends Controller
     public function index() : JsonResponse
     {
         $admins = $this->administradoresService->index();
+
         return $this->apiResponseDto->response(ResponseAlias::HTTP_OK, $admins, (count($admins) > 0) ? null : 'No hay administradores aún');
     }
 
@@ -48,6 +52,7 @@ class AdministradoresController extends Controller
     public function get(int $id) : JsonResponse
     {
         $admin = $this->administradoresService->get($id);
+
         return $this->gestionarRetorno($admin, 404);
     }
 
@@ -57,23 +62,25 @@ class AdministradoresController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
-     * @uses gestionarRetorno($admin, 423)
+     * @uses AdministradoresService::store
+     * @uses gestionarRetorno
      */
 
     public function store(Request $request) : JsonResponse
     {
-        $admin = $this->administradoresService->store($request);
-        return $this->gestionarRetorno($admin, 423);
+        $datos = $this->administradoresService->store($request);
+
+        return $this->gestionarRetorno($datos, 423);
     }
 
     /**
      * Recibe un dto de admin y devuelve una respuesta json
      *
+     * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws ModelNotFoundException
      * @throws ValidationException
-     * @uses gestionarRetorno($admin, 404)
+     * @uses gestionarRetorno
      */
 
     public function update(Request $request, int $id): JsonResponse
@@ -100,12 +107,48 @@ class AdministradoresController extends Controller
      * Permite el acceso al área de administración si matchean los datos
      *
      * @param Request $request
-     * @return JsonResponse
+     * @return RedirectResponse
+     * @throws ValidationException
+     * @uses AdministradoresService::login
      */
-    public function validarAdministrador(Request $request) : JsonResponse
+    public function login(Request $request) : RedirectResponse
     {
-        $admin = $this->administradoresService->validarAdministrador($request);
-        return $admin ? $this->apiResponseDto->response(ResponseAlias::HTTP_OK) : $this->apiResponseDto->responseError(404);
+        try {
+            $this->administradoresService->login($request);
+            return redirect()->route('homeAdmin');
+        }
+        catch (ModelNotFoundException $e) {
+            return redirect()->back()->withErrors(['Sus credenciales son incorrectas'])->withInput();
+        }
+
+    }
+
+    public function logout(Request $request)
+    {
+        $response = $this->administradoresService->logout($request);
+
+        /*if($response == '0') {
+            return $this->apiResponseDto->responseError(ResponseAlias::HTTP_UNAUTHORIZED, 'No se encuentra logueado');
+        }
+
+        if($response == '2') {
+            return $this->apiResponseDto->responseError(ResponseAlias::HTTP_UNAUTHORIZED, 'El token es incorrecto');
+        }
+
+        return $this->apiResponseDto->response(ResponseAlias::HTTP_OK,'Administrador deslogueado');*/
+        return $this->apiResponseDto->response(ResponseAlias::HTTP_OK,$response);
+
+    }
+
+    /**
+     * Retorna la vista home del administrador
+     *
+     * @return View
+     */
+
+    public function home(): View
+    {
+        return view('administrador.index');
     }
 
     //********************** Funciones auxiliares *************************
@@ -133,5 +176,18 @@ class AdministradoresController extends Controller
 
          return $this->apiResponseDto->response(ResponseAlias::HTTP_OK, $response);
      }
+
+    //********************** Funciones vistas *************************
+
+    /**
+     * Retorna la vista del formulario de login del administrador
+     *
+     * @return Factory|View
+     */
+
+    public function formLogin() : Factory|View
+    {
+        return view('administrador.login');
+    }
 
 }

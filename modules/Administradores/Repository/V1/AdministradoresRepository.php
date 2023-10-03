@@ -3,10 +3,16 @@
 namespace modules\Administradores\Repository\V1;
 
 use app\Repository\EloquentRepository;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Testing\Fluent\Concerns\Has;
+use Illuminate\Validation\ValidationException;
 use modules\Administradores\Entities\Administrador;
 use Carbon\Carbon;
 
@@ -40,7 +46,7 @@ class AdministradoresRepository extends EloquentRepository
 
     public function get(int $id) : Administrador
     {
-        $administrador    = Administrador::findOrFail($id);
+        $administrador = Administrador::findOrFail($id);
         $this->verificarInstanciaModelNotFound($administrador);
         return $administrador->makeHidden('password');
     }
@@ -50,17 +56,17 @@ class AdministradoresRepository extends EloquentRepository
      *
      * @param Request $request
      * @return Administrador
-     *@uses asignarDatosAdmin($administrador,$request)
      */
 
     public function store(Request $request) : Administrador
     {
-        $administrador = $this->getModel();
-        $adminConDatos = $this->asignarDatosAdmin($administrador,$request);
-        $adminFinal    = $this->generarUsuario($adminConDatos, false);
-        $adminFinal->save();
-
-        return $adminFinal;
+        return Administrador::create([
+            'nombre'     => $request->get('nombre'),
+            'apellido'   => $request->get('apellido'),
+            'usuario'    => $request->get('usuario'),
+            'password'   => Hash::make($request->get('password')),
+            'estado'     => 'A',
+        ]);
     }
 
     /**
@@ -98,62 +104,37 @@ class AdministradoresRepository extends EloquentRepository
     }
 
     /**
-     * Valida los datos de un administrador para verificar que exista
+     * Verifica, en primera instancia, que el administrador no se encuentre
+     * logueado ya. En caso de no estarlo, intenta loguearlo con las credenciales
+     * brindadas y le crea un token
      *
      * @param Request $request
-     * @return Administrador|bool
+     * @return Authenticatable|bool
+     * @throws ModelNotFoundException
      */
 
-    public function validarAdministrador(Request $request) : Administrador|bool
+    public function login(Request $request) : Authenticatable|bool
     {
-        return Administrador::where('usuario',$request->get('username'))
-                              ->where('password',$request->get('password'))
-                              ->firstOrFail();
+
+        if (Auth::attempt($request->only('usuario', 'password'))) {
+
+            //La regeneración de sesión evita ataques CSRF
+            $request->session()->regenerate(1);
+
+            return 1;
+
+        }
+
+        throw new ModelNotFoundException();
+
+    }
+
+    public function logout(Request $request)
+    {
+
     }
 
     //********************** Funciones auxiliares *************************
-
-    /**
-     * Asigna los datos de un administrador y lo retorna
-     *
-     * @param Administrador $administrador
-     * @param Request $request
-     * @return Administrador
-     */
-
-    public function asignarDatosAdmin(Administrador $administrador, Request $request) : Administrador
-    {
-        $administrador->nombre   = $request->input('nombre');
-        $administrador->apellido = $request->input('apellido');
-        $administrador->password = bcrypt($request->input('password'));
-        $administrador->estado   = 'A';
-        return $administrador;
-    }
-
-    /**
-     * Genera un usuario para un admin y retorna este último
-     *
-     * @param Administrador $administrador
-     * @param bool $esUpdate
-     * @return Administrador
-     */
-
-    public function generarUsuario(Administrador $administrador, bool $esUpdate) : Administrador
-    {
-        if(!$esUpdate) {
-            $idUltimoAdmin = Administrador::latest('id')->value('id');
-            if ($idUltimoAdmin !== null) {
-                $administrador->usuario = $administrador->nombre . $administrador->apellido . ($idUltimoAdmin + 1);
-            } else {
-                $administrador->usuario = $administrador->nombre . $administrador->apellido . 1;
-            }
-        }
-        else {
-            $administrador->usuario = $administrador->nombre . $administrador->apellido . $administrador->id;
-        }
-
-        return $administrador;
-    }
 
     /**
      * Recibe una variable y tira una excepción de ModelNotFound en caso de serlo
@@ -164,7 +145,7 @@ class AdministradoresRepository extends EloquentRepository
 
     public function verificarInstanciaModelNotFound(mixed $a) : void
     {
-        $a instanceof ModelNotFoundException ? (throw new ModelNotFoundException('')) : null;
+        $a instanceof ModelNotFoundException ?? throw new ModelNotFoundException('');
     }
 
 }
