@@ -10,7 +10,7 @@
   <!-- Bootstrap CSS v5.2.1 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="{{ asset('css/administrador/index.css') }}">
 
 </head>
 
@@ -34,11 +34,15 @@
             <a href="#tab5Id" class="nav-link" data-bs-toggle="tab">Another link</a>
         </li>
         <li class="nav-item" role="presentation">
-            <a href="#" class="nav-link disabled" data-bs-toggle="tab">Disabled</a>
         </li>
     </ul>
-    
-    <!-- Tab panes -->
+
+      <form method="POST" action="{{ route('admin.logout') }}">
+          @csrf
+          <button type="submit">Salir</button>
+      </form>
+
+      <!-- Tab panes -->
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="tab1Id" role="tabpanel"></div>
         <div class="tab-pane fade" id="tab2Id" role="tabpanel"></div>
@@ -46,13 +50,13 @@
         <div class="tab-pane fade" id="tab4Id" role="tabpanel"></div>
         <div class="tab-pane fade" id="tab5Id" role="tabpanel"></div>
     </div>
-    
+
     <!-- (Optional) - Place this js code after initializing bootstrap.min.js or bootstrap.bundle.min.js -->
     <script>
-        var triggerEl = document.querySelector('#navId a')
+        let triggerEl = document.querySelector('#navId a')
         bootstrap.Tab.getInstance(triggerEl).show() // Select tab by name
     </script>
-    
+
   </header>
   <main>
 

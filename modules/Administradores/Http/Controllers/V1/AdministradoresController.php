@@ -123,21 +123,19 @@ class AdministradoresController extends Controller
 
     }
 
-    public function logout(Request $request)
+    /**
+     * Llama una función que desloguea al administrador
+     * para luego redirigirlo a la página de login
+     *
+     * @param Request $request
+     * @uses AdministradoresService::logout
+     * @return RedirectResponse
+     */
+
+    public function logout(Request $request): RedirectResponse
     {
-        $response = $this->administradoresService->logout($request);
-
-        /*if($response == '0') {
-            return $this->apiResponseDto->responseError(ResponseAlias::HTTP_UNAUTHORIZED, 'No se encuentra logueado');
-        }
-
-        if($response == '2') {
-            return $this->apiResponseDto->responseError(ResponseAlias::HTTP_UNAUTHORIZED, 'El token es incorrecto');
-        }
-
-        return $this->apiResponseDto->response(ResponseAlias::HTTP_OK,'Administrador deslogueado');*/
-        return $this->apiResponseDto->response(ResponseAlias::HTTP_OK,$response);
-
+        $this->administradoresService->logout($request);
+        return redirect()->route('login');
     }
 
     /**

@@ -167,22 +167,20 @@ class AdministradoresService
         }
     }
 
-    public function logout(Request $request)
+    /**
+     * Desloguea e invalida la sesión del usuario
+     *
+     * @param Request $request
+     * @return void
+     */
+
+    public function logout(Request $request): void
     {
-        return [Auth::user()];
-        /*if(!auth()->user()) {
-            return '0';
-        }
+        Auth::logout();
 
-        $tokenRecibido = $request->bearerToken();
+        $request->session()->invalidate();
 
-        if($tokenRecibido == session('access_token')) {
-            session()->forget('access_token');
-            \auth()->logout();
-            return '1';
-        }
-
-        return '2';*/
+        $request->session()->regenerateToken();
     }
 
     //********************** Funciones auxiliares ***************************

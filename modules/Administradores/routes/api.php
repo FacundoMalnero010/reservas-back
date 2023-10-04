@@ -10,7 +10,6 @@ Route::prefix('administradores')->group(function (){
     Route::get('/{id}',    [AdministradoresController::class, 'get'])     ->name('admin.get');
     Route::post('/save',   [AdministradoresController::class, 'store'])   ->name('admin.store');
     Route::post('/login',  [AdministradoresController::class, 'login'])   ->name('admin.login');
-    Route::post('/logout', [AdministradoresController::class, 'logout'])  ->name('admin.logout');
     Route::put('/{id}',    [AdministradoresController::class, 'update'])  ->name('admin.update');
     Route::delete('/{id}', [AdministradoresController::class, 'destroy']) ->name('admin.destroy');
 });

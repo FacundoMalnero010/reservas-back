@@ -129,11 +129,6 @@ class AdministradoresRepository extends EloquentRepository
 
     }
 
-    public function logout(Request $request)
-    {
-
-    }
-
     //********************** Funciones auxiliares *************************
 
     /**
