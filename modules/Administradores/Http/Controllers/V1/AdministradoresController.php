@@ -111,11 +111,12 @@ class AdministradoresController extends Controller
      * @throws ValidationException
      * @uses AdministradoresService::login
      */
+
     public function login(Request $request) : RedirectResponse
     {
         try {
             $this->administradoresService->login($request);
-            return redirect()->route('homeAdmin');
+            return redirect()->route('admin.home');
         }
         catch (ModelNotFoundException $e) {
             return redirect()->back()->withErrors(['Sus credenciales son incorrectas'])->withInput();
@@ -135,18 +136,7 @@ class AdministradoresController extends Controller
     public function logout(Request $request): RedirectResponse
     {
         $this->administradoresService->logout($request);
-        return redirect()->route('login');
-    }
-
-    /**
-     * Retorna la vista home del administrador
-     *
-     * @return View
-     */
-
-    public function home(): View
-    {
-        return view('administrador.index');
+        return redirect()->route('admin.login');
     }
 
     //********************** Funciones auxiliares *************************
@@ -185,7 +175,18 @@ class AdministradoresController extends Controller
 
     public function formLogin() : Factory|View
     {
-        return view('administrador.login');
+        return view('admin.loginForm');
+    }
+
+    /**
+     * Retorna la vista home del administrador
+     *
+     * @return View
+     */
+
+    public function home(): View
+    {
+        return view('admin.home');
     }
 
 }

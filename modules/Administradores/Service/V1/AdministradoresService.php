@@ -5,13 +5,10 @@ namespace modules\Administradores\Service\V1;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use modules\Administradores\Dto\V1\AdministradoresDto;
-use App\Models\User;
-use modules\Administradores\Entities\Administrador;
 use modules\Administradores\Repository\V1\AdministradoresRepository;
 
 class AdministradoresService
