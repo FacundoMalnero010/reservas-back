@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,8 +13,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+require __DIR__.'../../modules/Consultas/routes/web.php';
 require __DIR__.'../../modules/Administradores/routes/web.php';
-
-Route::get('/', function () {
-    return view('welcome');
-});
